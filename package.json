@@ -1,0 +1,33 @@
+{
+  "name": "battleship",
+  "version": "1.0.0",
+  "description": "",
+  "private": "true",
+  "scripts": {
+    "test": "jest",
+    "watch": "webpack --watch",
+    "build": "webpack",
+    "watchjest": "jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sth21/battleship.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sth21/battleship/issues"
+  },
+  "homepage": "https://github.com/sth21/battleship#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.19.0",
+    "eslint": "^8.23.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "jest": "^29.0.2",
+    "prettier": "2.7.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  }
+}
