@@ -3,13 +3,14 @@
 /* eslint-disable import/prefer-default-export */
 
 export const Ship = (length) => {
-  const whereHit = Array(length).fill(false);
+  const whereHit = new Array(length).fill(false);
 
   const sunkStatus = false;
 
-  const hit = (index) => {
-    this.whereHit[index] = true;
-    return this.whereHit;
+  const hit = (index, ship) => {
+    const newArr = ship.whereHit;
+    newArr[index] = true;
+    return newArr;
   };
 
   const isSunk = (arr) => {

@@ -38,20 +38,29 @@ export const Gameboard = (() => {
 
   const recieveAttack = (posx, posy) => {
     const attackingSquare = Gameboard.board[posx][posy];
-    if (attackingSquare.whatOccupies !== undefined) {
+    if (typeof attackingSquare.whatOccupies === 'object') {
       const ship = attackingSquare.whatOccupies;
       attackingSquare.hitOrMiss = 'hit';
-      ship.hit(attackingSquare.index);
-      return ship;
+      ship.hit(attackingSquare.index, ship);
+    } else {
+      attackingSquare.hitOrMiss = 'miss';
     }
-    attackingSquare.hitOrMiss = 'miss';
     return attackingSquare.hitOrMiss;
   };
-  // recieveAttack(coords) => either marks ship as hit or registers as miss
 
-  // report if all ships are sunk
+  const isAllSunk = () => {
+    const arr = Gameboard.board;
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        if (arr[i][j].whatOccupies !== undefined && (arr[i][j].hitOrMiss === 'miss' || arr[i][j].hitOrMiss === undefined)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
 
   return {
-    board, boardSquare, initializeBoard, placeShip, recieveAttack,
+    board, boardSquare, initializeBoard, placeShip, recieveAttack, isAllSunk,
   };
 })();
