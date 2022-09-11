@@ -1,66 +1,77 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/prefer-default-export */
 
-export const Gameboard = (() => {
-  let board;
+export const Gameboard = () => {
   const boardSquare = () => ({
     position: undefined, whatOccupies: undefined, index: undefined, hitOrMiss: undefined,
   });
 
-  const initializeBoard = () => {
-    const tempBoard = [[], [], [], [], [], [], [], [], [], []];
-    let counter = 0;
-    tempBoard.forEach((column) => {
-      for (let i = 0; i < 10; i += 1) {
-        column[i] = boardSquare();
-        column[i].position = [counter, i];
-        if (i === 9) counter += 1;
+  const board = [[], [], [], [], [], [], [], [], [], []];
+  let counter = 0;
+  board.forEach((column) => {
+    for (let i = 0; i < 10; i += 1) {
+      column[i] = boardSquare();
+      column[i].position = [counter, i];
+      if (i === 9) counter += 1;
+    }
+  });
+
+  const getBoardSquare = (xpos, ypos) => board[xpos][ypos];
+
+  const getEmptySquares = () => {
+    const emptySquares = [];
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        if (board[i][j].hitOrMiss === undefined) emptySquares[emptySquares.length] = board[i][j];
       }
-    });
-    return tempBoard;
+    }
+    return emptySquares;
   };
 
   const placeShip = (ship, posx, posy, alignment) => {
-    const headOfShip = Gameboard.board[posx][posy];
-    Gameboard.board[posx][posy].whatOccupies = ship;
-    Gameboard.board[posx][posy].index = 0;
+    const headOfShip = board[posx][posy];
+    board[posx][posy].whatOccupies = ship;
+    board[posx][posy].index = 0;
     for (let i = 1; i < ship.length; i += 1) {
       if (alignment === 'x') {
         posx += 1;
       } else {
         posy += 1;
       }
-      Gameboard.board[posx][posy].whatOccupies = ship;
-      Gameboard.board[posx][posy].index = i;
+      board[posx][posy].whatOccupies = ship;
+      board[posx][posy].index = i;
     }
     return headOfShip;
   };
 
-  const recieveAttack = (posx, posy) => {
-    const attackingSquare = Gameboard.board[posx][posy];
-    if (typeof attackingSquare.whatOccupies === 'object') {
-      const ship = attackingSquare.whatOccupies;
-      attackingSquare.hitOrMiss = 'hit';
-      ship.hit(attackingSquare.index, ship);
-    } else {
-      attackingSquare.hitOrMiss = 'miss';
+  const recieveAttack = (master, attack) => {
+    if (typeof master.whatOccupies === 'object') {
+      const attackingShip = master.whatOccupies;
+      attack.whatOccupies = master.whatOccupies;
+      attack.hitOrMiss = 'hit';
+      attackingShip.hit(master.index);
+      return attackingShip;
     }
-    return attackingSquare.hitOrMiss;
+    attack.hitOrMiss = 'miss';
+    return attack.hitOrMiss;
   };
 
   const isAllSunk = () => {
-    const arr = Gameboard.board;
+    const arr = board;
+    let allEmpty = true;
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
-        if (arr[i][j].whatOccupies !== undefined && (arr[i][j].hitOrMiss === 'miss' || arr[i][j].hitOrMiss === undefined)) {
+        if (arr[i][j].whatOccupies !== undefined && arr[i][j].hitOrMiss !== 'hit') {
           return false;
         }
+        if (arr[i][j].whatOccupies !== undefined) allEmpty = false;
       }
     }
+    if (allEmpty === true) return false;
     return true;
   };
 
   return {
-    board, boardSquare, initializeBoard, placeShip, recieveAttack, isAllSunk,
+    getBoardSquare, getEmptySquares, placeShip, recieveAttack, isAllSunk,
   };
-})();
+};

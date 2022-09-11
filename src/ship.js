@@ -7,22 +7,20 @@ export const Ship = (length) => {
 
   const sunkStatus = false;
 
-  const hit = (index, ship) => {
-    const newArr = ship.whereHit;
-    newArr[index] = true;
-    return newArr;
+  const hit = (index) => {
+    whereHit[index] = true;
+    return whereHit;
   };
 
-  const isSunk = (arr) => {
+  const isSunk = () => {
     let status = true;
-    arr.forEach((location) => {
+    whereHit.forEach((location) => {
       if (location === false) status = false;
     });
     return status;
   };
 
   return {
-    whereHit,
     length,
     hit,
     isSunk,
