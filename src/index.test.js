@@ -83,20 +83,53 @@ describe('gameboard tests', () => {
     attack.recieveAttack(master.getBoardSquare(6, 0), attack.getBoardSquare(6, 0));
     expect(attack.isAllSunk()).toEqual(true);
   });
+
+  it('returns true if ship can be placed', () => {
+    const gameboard = Gameboard();
+    expect(gameboard.canShipBePlaced(battleship, 2, 0, 'x')).toEqual(true);
+  });
+
+  it('returns false if ship cannot be placed (1)', () => {
+    const gameboard = Gameboard();
+    expect(gameboard.canShipBePlaced(battleship, 7, 0, 'x')).toEqual(false);
+  });
+
+  it('returns false if ship cannot be placed (2)', () => {
+    const gameboard = Gameboard();
+    const carrier = Ship(4);
+    gameboard.placeShip(carrier, 0, 0, 'y');
+    expect(gameboard.canShipBePlaced(battleship, 7, 0, 'x')).toEqual(false);
+  });
+
+  it('returns heads of ships', () => {
+    const computerMaster = Gameboard();
+    computerMaster.placeShip(battleship, 2, 0, 'x');
+    expect(computerMaster.giveHeadOfShips().length).toEqual(1);
+  });
 });
 
 describe('player tests', () => {
   it('returns ship if player attacks ship on computer master', () => {
     const playerAttack = Gameboard();
     const computerMaster = Gameboard();
+    const player = Player();
     computerMaster.placeShip(battleship, 2, 0, 'x');
-    expect(Player.turn(playerAttack, computerMaster, 2, 0)).toEqual(expect.objectContaining({ sunkStatus: false }));
+    expect(player.turn(playerAttack, computerMaster, 2, 0)).toEqual(expect.objectContaining({ sunkStatus: false }));
   });
 
   it('returns miss if player attacks empty space on computer master', () => {
     const playerAttack = Gameboard();
     const computerMaster = Gameboard();
+    const player = Player();
     computerMaster.placeShip(battleship, 2, 0, 'x');
-    expect(Player.turn(playerAttack, computerMaster, 9, 0)).toEqual('miss');
+    expect(player.turn(playerAttack, computerMaster, 9, 0)).toEqual('miss');
+  });
+});
+
+describe('computer tests', () => {
+  it('randomizes computer board', () => {
+    const gameboard = Gameboard();
+    const computer = Computer();
+    expect(computer.randomizeBoard(gameboard).length).toEqual(5);
   });
 });

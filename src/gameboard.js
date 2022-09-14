@@ -30,8 +30,8 @@ export const Gameboard = () => {
 
   const placeShip = (ship, posx, posy, alignment) => {
     const headOfShip = board[posx][posy];
-    board[posx][posy].whatOccupies = ship;
-    board[posx][posy].index = 0;
+    headOfShip.whatOccupies = ship;
+    headOfShip.index = 0;
     for (let i = 1; i < ship.length; i += 1) {
       if (alignment === 'x') {
         posx += 1;
@@ -42,6 +42,22 @@ export const Gameboard = () => {
       board[posx][posy].index = i;
     }
     return headOfShip;
+  };
+
+  const canShipBePlaced = (ship, posx, posy, alignment) => {
+    const headOfShip = board[posx][posy];
+    if (headOfShip.whatOccupies !== undefined) return false;
+    for (let i = 1; i < ship.length; i += 1) {
+      if (alignment === 'x') {
+        posx += 1;
+      } else {
+        posy += 1;
+      }
+      if (posx < 0 || posx > 9) return false;
+      if (posy < 0 || posy > 9) return false;
+      if (board[posx][posy].whatOccupies !== undefined) return false;
+    }
+    return true;
   };
 
   const recieveAttack = (master, attack) => {
@@ -71,7 +87,24 @@ export const Gameboard = () => {
     return true;
   };
 
+  const giveHeadOfShips = () => {
+    const arr = board;
+    const heads = [];
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        if (arr[i][j].index === 0) heads[heads.length] = arr[i][j];
+      }
+    }
+    return heads;
+  };
+
   return {
-    getBoardSquare, getEmptySquares, placeShip, recieveAttack, isAllSunk,
+    getBoardSquare,
+    getEmptySquares,
+    placeShip,
+    canShipBePlaced,
+    recieveAttack,
+    isAllSunk,
+    giveHeadOfShips,
   };
 };
