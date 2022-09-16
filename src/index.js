@@ -3,6 +3,7 @@
 import { Gameboard } from './gameboard';
 import { Player } from './player';
 import { Computer } from './computer';
+import { DOM } from './DOM';
 
 export const Gameflow = (() => {
   let player;
@@ -37,3 +38,5 @@ export const Gameflow = (() => {
 
   return { startGame };
 })();
+
+window.addEventListener('load', DOM.loadBoard);
