@@ -45,17 +45,19 @@ export const Gameboard = () => {
   };
 
   const canShipBePlaced = (ship, posx, posy, alignment) => {
-    const headOfShip = board[posx][posy];
+    let positionX = posx;
+    let positionY = posy;
+    const headOfShip = board[positionX][positionY];
     if (headOfShip.whatOccupies !== undefined) return false;
     for (let i = 1; i < ship.length; i += 1) {
       if (alignment === 'x') {
-        posx += 1;
+        positionX += 1;
       } else {
-        posy += 1;
+        positionY += 1;
       }
-      if (posx < 0 || posx > 9) return false;
-      if (posy < 0 || posy > 9) return false;
-      if (board[posx][posy].whatOccupies !== undefined) return false;
+      if (positionX < 0 || positionX > 9) return false;
+      if (positionY < 0 || positionY > 9) return false;
+      if (board[positionX][positionY].whatOccupies !== undefined) return false;
     }
     return true;
   };

@@ -39,4 +39,5 @@ export const Gameflow = (() => {
   return { startGame };
 })();
 
-window.addEventListener('load', DOM.loadBoard);
+DOM.loadBoard();
+window.addEventListener('resize', DOM.loadBoard);
