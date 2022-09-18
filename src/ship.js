@@ -3,6 +3,8 @@
 /* eslint-disable import/prefer-default-export */
 
 export const Ship = (length) => {
+  let name;
+
   const whereHit = new Array(length).fill(false);
 
   const sunkStatus = false;
@@ -20,10 +22,16 @@ export const Ship = (length) => {
     return status;
   };
 
+  const setName = (newName) => {
+    if (newName !== undefined) name = newName;
+    return name;
+  };
+
   return {
     length,
     hit,
     isSunk,
     sunkStatus,
+    setName,
   };
 };

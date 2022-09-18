@@ -1,43 +1,71 @@
+/* eslint-disable consistent-return */
+/* eslint-disable import/no-cycle */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable no-useless-return */
+/* eslint-disable max-len */
+/* eslint-disable radix */
 /* eslint-disable import/prefer-default-export */
 
 import { Gameboard } from './gameboard';
 import { Player } from './player';
 import { Computer } from './computer';
 import { DOM } from './DOM';
+import { Ship } from './ship';
 
 export const Gameflow = (() => {
-  let player;
-  let playerMaster;
-  let playerAttack;
-  let computer;
-  let computerMaster;
-  let computerAttack;
-
-  const startGame = (event) => {
-    event.preventDefault();
-
-    // Declare player / player boards
-    player = Player();
-    playerMaster = Gameboard();
-    playerAttack = Gameboard();
-
-    // Declare computer / computer boards
-    computer = Computer();
-    computerMaster = Gameboard();
-    computerAttack = Gameboard();
-
-    // Use submit board to render player board
-    renderPlayerBoard(event, playerMaster);
-    // Randomly create computer board
-    // Remove form from DOM, render two boards to represent the playerAttack / computerAttack boards
-  };
+  const player = Player();
+  const playerMaster = Gameboard();
+  const playerAttack = Gameboard();
+  const computer = Computer();
+  const computerMaster = Gameboard();
+  const computerAttack = Gameboard();
+  let activeShip = Ship(5);
+  activeShip.setName('Carrier');
+  let axis = 'x';
 
   const renderPlayerBoard = (event, board) => {
 
   };
 
-  return { startGame };
+  const startGame = () => {
+    DOM.startGame(playerMaster);
+  };
+
+  const switchAxis = (event) => {
+    event.preventDefault();
+    if (axis === 'x') {
+      axis = 'y';
+      DOM.switchAxis(axis);
+    } else {
+      axis = 'x';
+      DOM.switchAxis(axis);
+    }
+  };
+
+  const placeShip = (event) => {
+    const xpos = event.target.dataset.xpos;
+    const ypos = event.target.dataset.ypos;
+    if (playerMaster.canShipBePlaced(activeShip, parseInt(xpos), parseInt(ypos), axis) === false) return;
+    playerMaster.placeShip(activeShip, parseInt(xpos), parseInt(ypos), axis);
+    if (activeShip.setName() === 'Destroyer') return startGame();
+    activeShip = DOM.placeShip(event);
+  };
+
+  const resetBoardColors = () => {
+    DOM.resetBoardColors(playerMaster);
+  };
+
+  const hoverPlayerForm = (event) => {
+    DOM.hoverPlayerForm(event, playerMaster);
+  };
+
+  return {
+    switchAxis, placeShip, startGame, resetBoardColors, hoverPlayerForm,
+  };
 })();
 
 DOM.loadBoard();
 window.addEventListener('resize', DOM.loadBoard);
+document.querySelector('.rotate').addEventListener('click', Gameflow.switchAxis);
+document.getElementById('board-container').addEventListener('mouseout', Gameflow.resetBoardColors);

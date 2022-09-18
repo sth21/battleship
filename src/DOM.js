@@ -1,3 +1,6 @@
+/* eslint-disable no-continue */
+/* eslint-disable import/no-cycle */
+/* eslint-disable no-useless-return */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
@@ -5,30 +8,39 @@
 /* eslint-disable import/prefer-default-export */
 
 import { Ship } from './ship';
-import { Gameboard } from './gameboard';
+import { Gameflow } from './index';
 
 export const DOM = (() => {
-  const axis = 'x';
-  const activeShip = Ship(5);
-  const playerMaster = Gameboard();
-  const playerAttack = Gameboard();
+  let axis = 'x';
+  let activeShip = Ship(5);
+  activeShip.setName('Carrier');
 
-  const hoverPlayerForm = (event) => {
+  const resetBoardColors = (playerMaster) => {
     const board = document.getElementById('board-container');
-    for (let i = 0; i < board.children.length; i += 1) {
-      const backgroundColor = window.getComputedStyle(board.children[i]).backgroundColor;
-      if (backgroundColor !== '#00205B' || backgroundColor !== '#C5B783') board.children[i].style.backgroundColor = '#00205B';
+    for (let i = 0; i < 10; i += 1) {
+      for (let k = 0; k < 10; k += 1) {
+        const activeSq = playerMaster.getBoardSquare(i, k).whatOccupies;
+        const boardIndex = parseInt(k.toString() + i.toString());
+        if (activeSq === undefined) {
+          board.children[boardIndex].style.backgroundColor = '#00205B';
+        } else {
+          board.children[boardIndex].style.backgroundColor = '#C5B783';
+          board.children[boardIndex].style.border = '.5px solid #00205B';
+        }
+      }
     }
+  };
+
+  const hoverPlayerForm = (event, playerMaster) => {
+    resetBoardColors(playerMaster);
+    const board = document.getElementById('board-container');
     const xpos = event.target.dataset.xpos;
     const ypos = event.target.dataset.ypos;
     let index = parseInt(ypos + xpos);
-    if (playerMaster.canShipBePlaced(activeShip, parseInt(xpos), parseInt(ypos), axis) === false) {
-      return;
-    }
+    if (playerMaster.canShipBePlaced(activeShip, parseInt(xpos), parseInt(ypos), axis) === false) return;
     let activeTile = event.target;
-    for (let i = 0; i < activeShip.length; i += 1) {
+    for (let j = 0; j < activeShip.length; j += 1) {
       activeTile.style.backgroundColor = 'white';
-      console.log(index);
       if (axis === 'x') {
         activeTile = board.children[index + 1];
         index += 1;
@@ -37,6 +49,44 @@ export const DOM = (() => {
         index += 10;
       }
     }
+  };
+
+  const changeShip = () => {
+    const header = document.querySelector('.ship-name');
+    if (activeShip.setName() === 'Carrier') {
+      activeShip = Ship(4);
+      activeShip.setName('Battleship');
+    } else if (activeShip.setName() === 'Battleship') {
+      activeShip = Ship(3);
+      activeShip.setName('Cruiser');
+    } else if (activeShip.setName() === 'Cruiser') {
+      activeShip = Ship(3);
+      activeShip.setName('Submarine');
+    } else if (activeShip.setName() === 'Submarine') {
+      activeShip = Ship(2);
+      activeShip.setName('Destroyer');
+    }
+    header.textContent = activeShip.setName();
+    return activeShip;
+  };
+
+  const placeShip = (event) => {
+    const board = document.getElementById('board-container');
+    const xpos = event.target.dataset.xpos;
+    const ypos = event.target.dataset.ypos;
+    let index = parseInt(ypos + xpos);
+    let activeTile = event.target;
+    for (let i = 0; i < activeShip.length; i += 1) {
+      activeTile.style.backgroundColor = '#C5B783';
+      if (axis === 'x') {
+        index += 1;
+        activeTile = board.children[index];
+      } else {
+        index += 10;
+        activeTile = board.children[index];
+      }
+    }
+    return changeShip();
   };
 
   const loadBoard = (board) => {
@@ -55,11 +105,47 @@ export const DOM = (() => {
         piece.dataset.ypos = i;
         piece.style.height = `${size}px`;
         piece.style.width = `${size}px`;
-        piece.addEventListener('mouseover', hoverPlayerForm);
+        if (board.getAttribute('id') === 'board-container') {
+          piece.addEventListener('mouseover', Gameflow.hoverPlayerForm);
+          piece.addEventListener('click', Gameflow.placeShip);
+        }
         board.appendChild(piece);
       }
     }
   };
 
-  return { loadBoard };
+  const switchAxis = (newAxis) => {
+    const button = document.querySelector('.rotate');
+    axis = newAxis;
+    if (axis === 'x') {
+      button.textContent = 'Rotate to X';
+    } else {
+      button.textContent = 'Rotate to Y';
+    }
+  };
+
+  const startGame = (playerMaster) => {
+    const overlay = document.getElementById('overlayPlayer');
+    overlay.classList.remove('.active');
+    overlay.classList.add('inactive');
+    const playerMasterBoard = document.getElementById('player-master');
+    const playerAttackBoard = document.getElementById('player-attack');
+    loadBoard(playerMasterBoard);
+    loadBoard(playerAttackBoard);
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        if (playerMaster.getBoardSquare(i, j).whatOccupies === undefined) {
+          continue;
+        } else {
+          const index = parseInt(j.toString() + i.toString());
+          playerMasterBoard.children[index].style.backgroundColor = '#C5B783';
+          playerMasterBoard.children[index].style.border = '.5px solid #00205B';
+        }
+      }
+    }
+  };
+
+  return {
+    resetBoardColors, hoverPlayerForm, loadBoard, switchAxis, placeShip, startGame,
+  };
 })();

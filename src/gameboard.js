@@ -29,17 +29,19 @@ export const Gameboard = () => {
   };
 
   const placeShip = (ship, posx, posy, alignment) => {
-    const headOfShip = board[posx][posy];
+    let positionX = posx;
+    let positionY = posy;
+    const headOfShip = board[positionX][positionY];
     headOfShip.whatOccupies = ship;
     headOfShip.index = 0;
     for (let i = 1; i < ship.length; i += 1) {
       if (alignment === 'x') {
-        posx += 1;
+        positionX += 1;
       } else {
-        posy += 1;
+        positionY += 1;
       }
-      board[posx][posy].whatOccupies = ship;
-      board[posx][posy].index = i;
+      board[positionX][positionY].whatOccupies = ship;
+      board[positionX][positionY].index = i;
     }
     return headOfShip;
   };
