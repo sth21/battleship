@@ -128,8 +128,7 @@ describe('player tests', () => {
 
 describe('computer tests', () => {
   it('randomizes computer board', () => {
-    const gameboard = Gameboard();
     const computer = Computer();
-    expect(computer.randomizeBoard(gameboard).length).toEqual(5);
+    expect(computer.randomizeBoard().giveHeadOfShips().length).toEqual(5);
   });
 });

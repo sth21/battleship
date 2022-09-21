@@ -15,20 +15,18 @@ import { Ship } from './ship';
 
 export const Gameflow = (() => {
   const player = Player();
-  const playerMaster = Gameboard();
+  let playerMaster = Gameboard();
   const playerAttack = Gameboard();
   const computer = Computer();
-  const computerMaster = Gameboard();
+  let computerMaster = Gameboard();
   const computerAttack = Gameboard();
   let activeShip = Ship(5);
   activeShip.setName('Carrier');
   let axis = 'x';
 
-  const renderPlayerBoard = (event, board) => {
-
-  };
-
-  const startGame = () => {
+  const startGame = (event) => {
+    if (event) playerMaster = computer.randomizeBoard();
+    computerMaster = computer.randomizeBoard();
     DOM.startGame(playerMaster);
   };
 
@@ -60,12 +58,53 @@ export const Gameflow = (() => {
     DOM.hoverPlayerForm(event, playerMaster);
   };
 
+  const turn = (event) => {
+    event.target.removeEventListener('click', Gameflow.turn);
+    const xpos = parseInt(event.target.dataset.xpos);
+    const ypos = parseInt(event.target.dataset.ypos);
+    const playerResult = player.turn(playerAttack, computerMaster, xpos, ypos);
+    if (typeof playerResult === 'object') {
+      DOM.hitEffect(event.target, 'hit');
+      if (computerMaster.isAllSunk() === true) {
+        const winnerOverlay = document.getElementById('overlayWinner');
+        const winnerText = document.getElementById('winner').children[0];
+        winnerText.textContent = 'Player Won!';
+        winnerOverlay.classList.remove('inactive');
+        winnerOverlay.classList.add('active');
+        return;
+      }
+    } else {
+      DOM.hitEffect(event.target, 'miss');
+    }
+
+    const computerResult = computer.turn(computerAttack, playerMaster);
+    if (typeof computerResult[2] === 'object') {
+      const index = computerResult[0] + (computerResult[1] * 10);
+      console.log(index);
+      const masterPiece = document.getElementById('player-master').children[index];
+      DOM.hitEffect(masterPiece, 'hit');
+      if (playerMaster.isAllSunk() === true) {
+        const winnerOverlay = document.getElementById('overlayWinner');
+        const winnerText = document.getElementById('winner').children[0];
+        winnerText.textContent = 'Computer Won!';
+        winnerOverlay.classList.remove('inactive');
+        winnerOverlay.classList.add('active');
+      }
+    } else {
+      const index = computerResult[0] + computerResult[1] + 1;
+      const masterPiece = document.getElementById('player-master').children[index];
+      DOM.hitEffect(masterPiece, 'miss');
+      console.log(playerMaster.giveHeadOfShips());
+    }
+  };
+
   return {
-    switchAxis, placeShip, startGame, resetBoardColors, hoverPlayerForm,
+    switchAxis, placeShip, startGame, resetBoardColors, hoverPlayerForm, turn,
   };
 })();
 
 DOM.loadBoard();
 window.addEventListener('resize', DOM.loadBoard);
 document.querySelector('.rotate').addEventListener('click', Gameflow.switchAxis);
+document.querySelector('.randomize').addEventListener('click', Gameflow.startGame);
 document.getElementById('board-container').addEventListener('mouseout', Gameflow.resetBoardColors);

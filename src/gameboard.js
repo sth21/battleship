@@ -69,10 +69,12 @@ export const Gameboard = () => {
       const attackingShip = master.whatOccupies;
       attack.whatOccupies = master.whatOccupies;
       attack.hitOrMiss = 'hit';
+      master.hitOrMiss = 'hit';
       attackingShip.hit(master.index);
       return attackingShip;
     }
     attack.hitOrMiss = 'miss';
+    master.hitOrMiss = 'miss';
     return attack.hitOrMiss;
   };
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable no-continue */
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-useless-return */
@@ -108,6 +109,8 @@ export const DOM = (() => {
         if (board.getAttribute('id') === 'board-container') {
           piece.addEventListener('mouseover', Gameflow.hoverPlayerForm);
           piece.addEventListener('click', Gameflow.placeShip);
+        } else {
+          piece.addEventListener('click', Gameflow.turn);
         }
         board.appendChild(piece);
       }
@@ -145,7 +148,12 @@ export const DOM = (() => {
     }
   };
 
+  const hitEffect = (square, hitStatus) => {
+    square.textContent = '●';
+    (hitStatus === 'hit') ? square.style.color = 'red' : square.style.color = 'white';
+  };
+
   return {
-    resetBoardColors, hoverPlayerForm, loadBoard, switchAxis, placeShip, startGame,
+    resetBoardColors, hoverPlayerForm, loadBoard, switchAxis, placeShip, startGame, hitEffect,
   };
 })();

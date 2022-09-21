@@ -10,21 +10,32 @@
     <script src="main.js" defer></script>
 </head>
 <body>
-    <div id="overlay" class="active">
+    <div id="overlayPlayer" class="active">
         <form id="player-board">
             <h1>Welcome to Battleship<br>Place your <span class="ship-name" style="font-weight: bold; color: white; border-bottom: 1px solid white">Carrier</span></h1>
             <div id="board-container"></div>
             <div id="settings">
-                <button class="rotate">Rotate to Y</button>
-                <button class="randomize">Randomize</button>
+                <button type="button" class="rotate">Rotate to Y</button>
+                <button type="button" class="randomize">Randomize</button>
             </div>
         </form>
     </div>
-    <div id="overlay" class="inactive">
+    <div id="overlayWinner" class="inactive">
         <div id="winner">
             <h1>______ Won</h1>
             <button class="play-again">Play Again</button>
         </div>
+    </div>
+    <div id="title">
+        <h1>Battleship</h1>
+    </div>
+    <div id="boards">
+        <div id="player-master"></div>
+        <div id="player-attack"></div>
+    </div>
+    <div id="creator">
+        <p>sth21</p>
+        <img src="./media/githublogo.png">
     </div>
 </body>
 </html>
