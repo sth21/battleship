@@ -28,9 +28,6 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
-body {
-	line-height: 1;
-}
 
 @import url('https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap');
 
@@ -45,7 +42,7 @@ body {
     background-color: var(--navy-blue);
 }
 
-#overlay {
+#overlayPlayer, #overlayWinner {
     position: fixed;
     width: 100%; 
     height: 100%; 
@@ -74,7 +71,7 @@ form, #winner {
     right: 50%;
     transform: translate(-50%, -50%);
     display: grid;
-    grid-area: 1fr 8fr 1fr / 1fr;
+    grid-template: 1fr 8fr 1fr / 1fr;
     align-items: center;
     justify-items: center;
     gap: 20px;
@@ -105,10 +102,10 @@ form, #winner {
     display: flex;
     align-items: center;
     justify-content: center;
-    align-self: start;
+    align-self: top;
     gap: 50px;
     width: 100%;
-    height: 75%;
+    height: 100%;
     padding-top: 5%;
 }
 
@@ -120,17 +117,21 @@ h1 {
     line-height: 1.1;
 }
 
-#board-container {
+#board-container, #player-master, #player-attack {
     width: 50%;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: flex-start;
+    border: 3px solid var(--navy-blue);
 }
 
 .board-piece {
     background: var(--navy-blue);
     border: .5px solid var(--navy-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 button {
@@ -141,4 +142,43 @@ button {
     color: var(--navy-gold);
     border: 1px solid var(--navy-blue);
     font-size: .6rem;
+}
+body {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template: 1fr 5fr 1fr / 1fr;
+    align-items: center;
+    justify-items: center;
+}
+
+#title h1 {
+    font-size: 2rem;
+    margin-bottom: 0;
+}
+
+#boards {
+    width: 75%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15%;
+}
+
+#player-master, #player-attack {
+    width: 80%;
+    border: 3px solid var(--navy-gold);
+}
+
+img {
+    height: 50px;
+    width: 50px;
+}
+
+#creator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10%;
 }
