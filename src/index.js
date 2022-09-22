@@ -80,7 +80,6 @@ export const Gameflow = (() => {
     const computerResult = computer.turn(computerAttack, playerMaster);
     if (typeof computerResult[2] === 'object') {
       const index = computerResult[0] + (computerResult[1] * 10);
-      console.log(index);
       const masterPiece = document.getElementById('player-master').children[index];
       DOM.hitEffect(masterPiece, 'hit');
       if (playerMaster.isAllSunk() === true) {
@@ -91,10 +90,9 @@ export const Gameflow = (() => {
         winnerOverlay.classList.add('active');
       }
     } else {
-      const index = computerResult[0] + computerResult[1] + 1;
+      const index = computerResult[0] + (computerResult[1] * 10);
       const masterPiece = document.getElementById('player-master').children[index];
       DOM.hitEffect(masterPiece, 'miss');
-      console.log(playerMaster.giveHeadOfShips());
     }
   };
 
@@ -108,3 +106,4 @@ window.addEventListener('resize', DOM.loadBoard);
 document.querySelector('.rotate').addEventListener('click', Gameflow.switchAxis);
 document.querySelector('.randomize').addEventListener('click', Gameflow.startGame);
 document.getElementById('board-container').addEventListener('mouseout', Gameflow.resetBoardColors);
+document.querySelector('.play-again').addEventListener('click', () => window.location.reload());
