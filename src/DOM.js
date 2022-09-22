@@ -117,6 +117,31 @@ export const DOM = (() => {
     }
   };
 
+  const resizeBoard = () => {
+    const boardArr = [];
+    const overlay1 = document.getElementById('overlayWinner');
+    const overlay2 = document.getElementById('overlayPlayer');
+    if (overlay1.classList.contains('active')) return;
+    if (overlay2.classList.contains('active')) {
+      boardArr[boardArr.length] = document.getElementById('board-container');
+    } else {
+      boardArr[boardArr.length] = document.getElementById('player-master');
+      boardArr[boardArr.length] = document.getElementById('player-attack');
+    }
+    for (let i = 0; i < boardArr.length; i += 1) {
+      const { width } = window.getComputedStyle(boardArr[i]);
+      boardArr[i].style.height = width;
+      const size = (width.slice(0, width.length - 2) / 10) - 1;
+      for (let j = 0; j < 10; j += 1) {
+        for (let k = 0; k < 10; k += 1) {
+          const index = j + (k * 10);
+          boardArr[i].children[index].style.width = `${size}px`;
+          boardArr[i].children[index].style.height = `${size}px`;
+        }
+      }
+    }
+  };
+
   const switchAxis = (newAxis) => {
     const button = document.querySelector('.rotate');
     axis = newAxis;
@@ -154,6 +179,6 @@ export const DOM = (() => {
   };
 
   return {
-    resetBoardColors, hoverPlayerForm, loadBoard, switchAxis, placeShip, startGame, hitEffect,
+    resetBoardColors, hoverPlayerForm, loadBoard, resizeBoard, switchAxis, placeShip, startGame, hitEffect,
   };
 })();

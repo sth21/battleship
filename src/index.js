@@ -25,6 +25,7 @@ export const Gameflow = (() => {
   let axis = 'x';
 
   const startGame = (event) => {
+    document.getElementById('overlayPlayer').classList.remove('active');
     if (event) playerMaster = computer.randomizeBoard();
     computerMaster = computer.randomizeBoard();
     DOM.startGame(playerMaster);
@@ -102,7 +103,7 @@ export const Gameflow = (() => {
 })();
 
 DOM.loadBoard();
-window.addEventListener('resize', DOM.loadBoard);
+window.addEventListener('resize', DOM.resizeBoard);
 document.querySelector('.rotate').addEventListener('click', Gameflow.switchAxis);
 document.querySelector('.randomize').addEventListener('click', Gameflow.startGame);
 document.getElementById('board-container').addEventListener('mouseout', Gameflow.resetBoardColors);
