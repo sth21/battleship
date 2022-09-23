@@ -182,3 +182,15 @@ img {
     align-items: center;
     gap: 10%;
 }
+
+button:hover, #player-attack > *:hover {
+    filter: brightness(300%);
+}
+
+button, #player-attack > * {
+    transition: .5s;
+}
+
+button:active, #player-attack > *:active {
+    transform: scale(1.2);
+}

@@ -12,9 +12,9 @@ import { Ship } from './ship';
 import { Gameflow } from './index';
 
 export const DOM = (() => {
-  let axis = 'x';
   let activeShip = Ship(5);
   activeShip.setName('Carrier');
+  let axis = 'x';
 
   const resetBoardColors = (playerMaster) => {
     const board = document.getElementById('board-container');
@@ -145,10 +145,10 @@ export const DOM = (() => {
   const switchAxis = (newAxis) => {
     const button = document.querySelector('.rotate');
     axis = newAxis;
-    if (axis === 'x') {
-      button.textContent = 'Rotate to X';
-    } else {
+    if (newAxis === 'x') {
       button.textContent = 'Rotate to Y';
+    } else {
+      button.textContent = 'Rotate to X';
     }
   };
 
