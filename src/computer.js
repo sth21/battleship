@@ -28,7 +28,7 @@ export const Computer = () => {
 
   const randomizeBoard = () => {
     const computerMaster = Gameboard();
-    const queue = [Ship(2), Ship(2), Ship(3), Ship(4), Ship(5)];
+    const queue = [Ship(2), Ship(3), Ship(3), Ship(4), Ship(5)];
     while (queue.length !== 0) {
       const position = selectPosition(computerMaster);
       const axis = selectAxis();
