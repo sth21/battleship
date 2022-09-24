@@ -192,5 +192,5 @@ button, #player-attack > * {
 }
 
 button:active, #player-attack > *:active {
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
